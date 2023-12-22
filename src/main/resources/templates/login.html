@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+
+  <link rel="stylesheet" href="/css/login.css"/>
+  <script th:src="@{/js/login.js}"></script>
+  <style>
+    body {
+      background-position: center;
+      background-repeat: repeat;
+      background-image: url("/img/customer/login.jpg");
+      width: 100%;
+      height: 100vh;
+      background-size: contain;
+      background-color: #faebde;
+    }
+  </style>
+
+</head>
+<body>
+<h3 style="color:white">[The administrator information provided to CPT202 teacher]<br>administrator ID:admin@admin.com <br> Password:Admin123 <br> Use this ID to enter the management page.<br>Please note that you still need to register for an account to log in as a customer</h3>
+  <div class="container" th:class="container">
+    <div class="login" th:class="login">
+      <h2 >Login</h2>
+      <div class="box" th:class="box">
+        <form role="form" action = "/login" method="post">
+          <div class="form-group" th:class="form-group">
+            <label for="username" >Username(Please use email: example@example)</label>
+            <input type="email" id="username" name="username" >
+          </div>
+          <div class="form-group" th:class="form-group">
+            <label for="password" >Password</label>
+            <input type="password" id="password" name="password"  required pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{6,}$"
+                   title="Password must contain both uppercase and lowercase letters, as well as at least one number, and be at least 6 characters in length.">
+          </div>
+          <input type="submit" id = "login" value = "login">
+        </form>
+        <form role="form1" action="/register" method="get">
+          <input type="submit" id="register" value="register">
+        </form>
+      </div>
+
+      <div id="alert" class="alert" th:id="alert"></div>
+    </div>
+  </div>
+</body>
+</html>

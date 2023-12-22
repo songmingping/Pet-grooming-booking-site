@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Groomer</title>
+    <link rel="stylesheet" th:href="@{/css/admin/base.css}">
+    <link rel="stylesheet" th:href="@{/css/admin/dashboard.css}">
+</head>
+<body>
+<div th:replace="fragments/adminsidebar :: adminsidebar"></div>
+<div th:replace="fragments/adminsidebar :: adminheader"></div>
+
+<div class="main-container" id="main-content">
+    <h1>Edit Groomer</h1>
+
+    <form th:action="@{/admin/addGroomer}" th:object="${groomer}" method="post">
+        <!-- Use the fields of the Groomer class here, like this: -->
+
+        <label for="name">Name:</label>
+        <input type="text" th:field="*{name}" id="name" required />
+
+        <label for="gender">Gender:</label>
+        <input type="text" th:field="*{gender}" id="gender" required/>
+
+        <label for="age">Age:</label>
+        <input type="text" th:field="*{age}" id="age" required />
+
+        <label for="groomerStarLevelPriceCoefficientId">Groomer Star Level Price Coefficient ID:</label>
+        <input type="text" th:field="*{groomerStarLevelPriceCoefficientId}" id="groomerStarLevelPriceCoefficientId" required />
+
+        <label for="selfIntroduction">Self Introduction:</label>
+        <input type="text" th:field="*{selfIntroduction}" id="selfIntroduction"  required />
+
+        <label for="workStartTime">Work Start Time:</label>
+        <input type="text" th:field="*{workStartTime}" id="workStartTime" required />
+
+        <label for="workEndTime">Work End Time:</label>
+        <input type="text" th:field="*{workEndTime}" id="workEndTime" required />
+        <label for="isWorking">Is working:</label>
+        <input type="checkbox" th:field="*{isWorking}" id="isWorking" required/>
+
+
+        <label for="briefIntroduction">Brief Introduction:</label>
+        <input type="text" th:field="*{briefIntroduction}" id="briefIntroduction" required />
+
+        <label for="detailIntroduction">Detail Introduction:</label>
+        <input type="text" th:field="*{detailIntroduction}" id="detailIntroduction" required />
+
+
+        <button type="submit">Add</button>
+
+    </form>
+
+    <a href="javascript:history.back()">Cancel</a>
+</div>
+</body>
+</html>

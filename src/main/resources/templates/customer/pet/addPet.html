@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="ch" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Pet</title>
+    <link rel="stylesheet" th:href="@{/css/customer/base.css}">
+    <link rel="stylesheet" th:href="@{/css/customer/editProfile.css}">
+</head>
+
+<body>
+<div th:replace="fragments/customersidebar :: customersidebar"></div>
+<div th:replace="fragments/customersidebar :: customerheader"></div>
+<div class="main-container" id="main-container">
+<form th:action="@{/customer/pet/insert}" th:object="${pet}" method="post">
+    <label for="name" >Name:</label>
+    <input type="text" id="name" name="name" maxlength="20" required/><br/>
+
+    <label for="type">Type:</label>
+    <select id="type" name="type" required>
+        <option value="">-- Select Type --</option>
+        <option value="Siberian Husky">Siberian Husky</option>
+        <option value="Samoyed">Samoyed</option>
+        <option value="German Shepherd Dog">German Shepherd Dog</option>
+        <option value="Belgian hound">Belgian hound</option>
+        <option value="Poodle">Poodle</option>
+        <option value="Bichon">Bichon</option>
+        <option value="Bulldog">Bulldog</option>
+        <option value="Pomeranian">Pomeranian</option>
+        <option value="Pug">Pug</option>
+        <option value="Corgi">Corgi</option>
+        <option value="Beagle">Beagle</option>
+        <option value="Cocker spaniel">Cocker spaniel</option>
+        <option value="Labrador">Labrador</option>
+        <option value="Schnauzer">Schnauzer</option>
+        <option value="Tibetan Mastiff">Tibetan Mastiff</option>
+        <option value="Rottweiler">Rottweiler</option>
+        <option value="Golden Retriever">Golden Retriever</option>
+        <option value="Chihuahua">Chihuahua</option>
+        <option value="Yorkshire terrier">Yorkshire terrier</option>
+        <option value="Maltese">Maltese</option>
+        <option value="Dachshund">Dachshund</option>
+        <option value="Chow">Chow</option>
+        <option value="Persian">Persian</option>
+        <option value="Siamese">Siamese</option>
+        <option value="Ragdoll">Ragdoll</option>
+        <option value="Garfield">Garfield</option>
+        <option value="British shorthair">British shorthair</option>
+        <option value="Exotic shorthair">Exotic shorthair</option>
+        <option value="Maine coon">Maine coon</option>
+        <option value="Scottish fold">Scottish fold</option>
+        <option value="Canadian hairless">Canadian hairless</option>
+        <option value="Chinese cat">Chinese cat</option>
+    </select><br/>
+
+
+
+    <label for="sex">Sex:</label>
+    <select id="sex" name="sex" required>
+        <option value="">-- Select Sex --</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+    </select><br/>
+
+
+    <label for="size">Size:</label>
+    <select id="size" name="size" required>
+        <option value="">-- Select Size --</option>
+        <option value="big">Big</option>
+        <option value="mid">Mid</option>
+        <option value="small">Small</option>
+    </select><br/>
+
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required/><br/>
+
+
+    <label for="tips">Tips:</label>
+    <input type="text" id="tips" name="tips" maxlength="100" required/><br/>
+
+    <button type="submit">Add Pet</button>
+</form>
+</div>
+</body>
+</html>

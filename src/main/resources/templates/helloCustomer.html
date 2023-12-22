@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>用户首页</title>
+</head>
+<body>
+<h1>欢迎来到用户首页</h1>
+<!--<h1 th:text="${userid}"></h1>-->
+<form role="form1" th:action="@{'/customer/user-profile?username='+${username}}" method="post">
+    <input type="submit" id="register" value="user-profile">
+</form>
+<button onclick="redirectTo('/customer/book-service')">Book-Service</button>
+
+<script>
+    function redirectTo(page) {
+        window.location.href = page;
+    }
+</script>
+
+</body>
+</html>

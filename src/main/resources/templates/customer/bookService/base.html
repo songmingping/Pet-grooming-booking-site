@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Customer Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/customer/base.css}">
+    <link rel="stylesheet" th:href="@{/css/customer/bookService/bookService_base.css}">
+</head>
+
+<body>
+
+<div  th:replace="fragments/customersidebar :: customersidebar"></div>
+<div  th:replace="fragments/customersidebar :: customerheader"></div>
+
+<div class="main-container" id="main-content">
+    <div class="row-container">
+    <!--Choose Pet 1st-->
+        <div class="select-pets-container">
+            <div id="select-pets">
+                <label for="pet"><h2 class="label">Select Pet</h2></label>
+                <select id="pet" name="pet" onchange="selectPet();getDates()" required>
+                    <option value="">Please Select A Pet</option>
+                    <option th:each="pet : ${petList}"
+                            th:text="${pet.name}"
+                            th:value="${pet.petTypeId}"
+                            th:icon="${pet.iconURL}"
+                            th:sex="${pet.sex}"
+                            th:petId="${pet.petId}" required>
+                    </option>
+                </select>
+            </div>
+            <div id="selected-pet">
+                <img id="petIcon" src="" alt="">
+                <ul id="petInfo">
+                    <li id="petName"><strong>NAME</strong> </li>
+                    <li id="petSex"><strong>SEX</strong> </li>
+                </ul>
+            </div>
+
+        </div>
+        <script>
+            selectPet();
+        </script>
+
+
+        <script>
+        function selectPet() {
+            const petSelector = document.getElementById("pet");
+            const selectedPet = petSelector.options[petSelector.selectedIndex];
+            const iconUrl = selectedPet.getAttribute("icon");
+            const name = selectedPet.textContent;
+            const sex = selectedPet.getAttribute("sex");
+            document.getElementById("petIcon").src = iconUrl;
+            document.getElementById("petName").textContent = "NAME " + name;
+            document.getElementById("petSex").textContent = "SEX " + sex;
+        }
+    </script>
+
+    <script>
+        function getDates() {
+            const petTypeId = document.getElementById("pet").value;
+
+            if (petTypeId !== "") {
+                document.getElementById("date").disabled = false;
+            }
+        }
+    </script>
+
+        <div id="appointmentTime">
+            <div class="date-time-container">
+                <div id="dates" onchange="getTimes()">
+                    <label for='date' class="label"><h2 class="label">Select Date</h2></label>
+                    <select id="date" name="date" disabled required>
+                        <option value="">Please Select Date</option>
+                        <option th:each="date:${dates}" th:value="${date}" th:text="${date}" required></option>
+                    </select>
+                </div>
+
+                <div id="times" class="times" onchange="getAppointment()">
+                    <label for="time"><h2 class="label">Select Time</h2></label>
+                    <input type="time" id="time" disabled>
+                </div>
+            </div>
+        </div>
+
+
+        <script>
+        function getTimes() {
+            const petTypeId = document.getElementById("pet").value;
+            const date = document.getElementById("date").value;
+            console.log(date);
+
+            if (petTypeId !== "" && date !== "") {
+                document.getElementById("time").disabled = false;
+            }
+        }
+    </script>
+
+    <div id="appointments" class="appointments">
+        <div id="appointment" class="appointment">
+            <label for="service">Select Service</label>
+            <select id="service" name="service" onchange="showServiceDetail(event)" required>
+                <option value="">Please Select Service</option>
+                <option th:each="service:${servicesList}" th:text="${service.name}"
+                        th:value="${service.serviceId}" required></option>
+            </select>
+
+            <label for="groomer">Select Groomer</label>
+            <select id="groomer" name="groomer" onchange="showGroomerDetail(event)" required>
+                <option value="">Please Select Groomer</option>
+                <option th:each="groomer:${groomersList}" th:text="${groomer.name}"
+                        th:value="${groomer.groomerId}" required></option>
+            </select>
+        </div>
+        <button id="del-btn"></button>
+    </div>
+
+    <script>
+        document.querySelector("#service").dispatchEvent(new Event('change'));
+        document.querySelector("#service").addEventListener("change", showServiceDetail);
+        document.querySelector("#groomer").addEventListener("change", showGroomerDetail);
+    </script>
+    </div>
+    <button id="add-btn" type="button" onclick="addAppointment()">Add New Services</button>
+    <button id="submit" type="button" onclick="event.preventDefault(); showSuccessModal();">Submit</button>
+
+
+
+    <script>
+        function showSuccessModal() {
+            document.getElementById("success-modal").style.display = "block";
+        }
+
+        document.getElementById("submit").addEventListener("click", function() {
+            packageData(); // Call your packageData() function here
+        });
+
+    </script>
+    <script th:inline="javascript">
+
+        function packageData() {
+            const selectedPet = document.querySelectorAll('select[name="pet"]')[0];
+            const petId = parseInt(selectedPet.options[selectedPet.selectedIndex].getAttribute("petId"));
+            const date = document.getElementById("date").value;
+            const time = document.getElementById("time").value;
+            const userId = document.getElementById("userId").value;
+
+            const services = Array.from(document.getElementsByName("service")).map(option => option.value);
+
+            const groomers = Array.from(document.getElementsByName("groomer")).map(option => option.value);
+
+
+            const selectedServices = document.querySelectorAll('#appointments select[name="service"]');
+            const selectedGroomers = document.querySelectorAll('#appointments select[name="groomer"]');
+            let totalPrice = 0, totalDuration = 0;
+
+            for (let i = 0; i < selectedServices.length; i++) {
+                const service = selectedServices[i];
+                const groomer = selectedGroomers[i];
+
+                const basePrice = parseFloat(service.options[service.selectedIndex].getAttribute("basePrice"));
+                const duration = parseInt(service.options[service.selectedIndex].getAttribute("duration"));
+                const coefficient = parseInt(groomer.options[groomer.selectedIndex].getAttribute("star")) * 0.25 + 1;
+
+                console.log("Index:" + service.selectedIndex + "\tbasePrice:" + basePrice + "\tduration:" + duration + "\tcoefficient" + coefficient);
+
+                totalPrice += basePrice * coefficient;
+                totalDuration += duration;
+            }
+
+
+            console.log("Total Price:" + totalPrice); // or do whatever you need with the total price
+            console.log("Total Duration:" + totalDuration);
+
+
+            if (petId !== null && date !== "" && time !== "" && services !== null && !isNaN(totalPrice) && !isNaN(totalDuration)&& groomers !== null) {
+                        window.location.href = "/customer/dashboard/book-service/submit?petId=" + petId + "&date=" + date + "&time=" + time + "&services=" + services + "&groomers=" + groomers + "&totalPrice=" + totalPrice + "&totalDuration=" + totalDuration;
+                        console.log("/customer/" + userId + "/orderHistory")
+            }
+        }
+    </script>
+
+
+    <script>
+        function addAppointment() {
+            // Clone the first form instance
+            const clonedAppointment = document.getElementById("appointment").cloneNode(true);
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "Delete";
+            deleteBtn.type = "button";
+            deleteBtn.addEventListener("click", function () {
+                delAppointment(deleteBtn);
+            });
+            clonedAppointment.appendChild(deleteBtn);
+
+            // Add event listeners for the cloned appointment's service and groomer dropdowns
+            clonedAppointment.querySelector("#service").addEventListener("change", showServiceDetail);
+            clonedAppointment.querySelector("#groomer").addEventListener("change", showGroomerDetail);
+
+            document.getElementById("appointments").appendChild(clonedAppointment);
+        }
+
+        function delAppointment(deleteBtn) {
+            // Remove the form instance containing the clicked delete button
+            deleteBtn.parentElement.remove();
+        }
+    </script>
+
+
+    <script>
+        function showServiceDetail(event) {
+            let serviceSelector = event.target;
+            let selectedOption = serviceSelector.options[serviceSelector.selectedIndex];
+
+            // Find the container where you want to display the service details
+            let serviceDetailsContainer = serviceSelector.parentElement; // or another specific container
+
+            serviceDetailsContainer.querySelector('#selected-service-icon').src = selectedOption.getAttribute('icon')
+            serviceDetailsContainer.querySelector('#selected-service-name').textContent = selectedOption.getAttribute('text');
+            serviceDetailsContainer.querySelector('#selected-service-price').textContent = "Base Price:" + selectedOption.getAttribute('basePrice');
+            serviceDetailsContainer.querySelector('#selected-service-duration').textContent = "Duration:" + selectedOption.getAttribute('duration');
+        }
+
+        function showGroomerDetail(event) {
+            let groomerSelector = event.target;
+            let selectedOption = groomerSelector.options[groomerSelector.selectedIndex];
+
+            // Find the container where you want to display the groomer details
+            let groomerDetailsContainer = groomerSelector.parentElement; // or another specific container
+            groomerDetailsContainer.querySelector('#selected-groomer-icon').src = selectedOption.getAttribute('icon');
+            groomerDetailsContainer.querySelector('#selected-groomer-name').textContent = selectedOption.getAttribute('text');
+            groomerDetailsContainer.querySelector('#selected-groomer-star').textContent = "Star:" + selectedOption.getAttribute('star');
+        }
+    </script>
+
+    <script>
+        function getAppointment() {
+            const petTypeId = document.getElementById("pet").value;
+            const date = document.getElementById("date").value;
+            const time = document.getElementById("time").value;
+
+            if (petTypeId !== "" && date !== "" && time !== "") {
+
+                const xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState === 4 && this.status === 200) {
+                        document.getElementById("appointment").innerHTML = this.responseText;
+                        document.getElementById("appointment").disabled = false;
+                    }
+                };
+
+                xhttp.open("GET", "/customer/dashboard/book-service/appointment?petTypeId=" + petTypeId + "&date=" + date + "&time=" + time, true);
+                xhttp.send();
+            }
+        }
+    </script>
+</div>
+</body>
+</html>
